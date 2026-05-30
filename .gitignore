@@ -1,0 +1,12 @@
+node_modules/
+dist/
+src-tauri/target/
+
+# 密钥 & 配置
+.env
+.env.*
+*.key
+config.json
+
+# 参考 demo（不纳入主项目版本管理）
+screen-translator-demo/

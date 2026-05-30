@@ -1,0 +1,16 @@
+{
+  "identifier": "default",
+  "description": "Capability for the main window",
+  "windows": ["main", "area-selector"],
+  "permissions": [
+    "core:default",
+    "core:window:allow-set-always-on-top",
+    "core:window:allow-close",
+    "core:window:allow-minimize",
+    "core:window:allow-show",
+    "core:window:allow-hide",
+    "core:window:allow-set-focus",
+    "core:event:allow-emit",
+    "core:event:allow-listen"
+  ]
+}
