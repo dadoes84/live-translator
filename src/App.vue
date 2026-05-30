@@ -215,14 +215,20 @@ const prompt = ref('你是一个专业的本地化翻译器，只将用户输入
 const shortcutToggle = ref('Ctrl+Shift+T')
 const shortcutArea = ref('Ctrl+Shift+A')
 
-function onAiSettingsSave(payload: { apiKey: string; model: string; prompt: string; shortcutToggle: string; shortcutArea: string }) {
+async function onAiSettingsSave(payload: { apiKey: string; model: string; prompt: string; shortcutToggle: string; shortcutArea: string }) {
+  // 保存旧值用于注销
+  const oldToggle = shortcutToggle.value
+  const oldArea = shortcutArea.value
+
   apiKey.value = payload.apiKey
   model.value = payload.model
   prompt.value = payload.prompt
   shortcutToggle.value = payload.shortcutToggle
   shortcutArea.value = payload.shortcutArea
-  // 重新注册快捷键
-  unregisterShortcuts()
+
+  // 用旧值注销，新值注册
+  try { if (oldToggle && oldToggle !== shortcutToggle.value) await unregister(oldToggle) } catch {}
+  try { if (oldArea && oldArea !== shortcutArea.value) await unregister(oldArea) } catch {}
   registerShortcuts()
   scheduleSave()
 }
