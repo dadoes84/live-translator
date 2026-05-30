@@ -23,6 +23,12 @@ Live Translator is a Windows desktop app that captures a user-defined screen reg
 - **Customizable display** — font family, size, text color, and background color for the translation area
 - **Always-on-top** — pin the window so translations stay visible above games or videos
 - **Persistent settings** — all preferences (including API key) are saved locally and loaded on restart
+- **Privacy first** — API key and all settings are stored locally on your machine. Nothing is uploaded, collected, or sent anywhere except to the DeepSeek API for translation
+- **Custom prompts** — fully customizable system prompt for the AI, allowing you to tailor translation style and terminology for different contexts
+
+### Background
+
+This tool was born out of frustration with the poor quality of machine translations in Japanese visual novels (Galgame). Off-the-shelf translators often produce stiff, unnatural results that break immersion. The solution: build your own translator with a customizable AI prompt, tuned specifically for the type of content you're reading.
 
 ### How It Works
 
@@ -81,6 +87,12 @@ Select Area → Screenshot → Windows OCR → Stability Check → DeepSeek AI �
 - **显示自定义** — 翻译区域支持自定义字体、字号、文字颜色、背景颜色
 - **窗口置顶** — 一键将翻译窗口固定在最前，游戏/视频场景下始终可见
 - **设置持久化** — 所有偏好设置（含 API Key）保存至本地，下次启动自动加载
+- **隐私优先** — API Key 及所有设置项仅保存在本地，不收集、不上传任何信息。唯一的外部通讯是向 DeepSeek API 发送待翻译的文字
+- **自定义提示词** — 可自由编辑 AI 的系统提示词，根据不同场景调整翻译风格、用词习惯，让译文更符合你的口味
+
+### 开发背景
+
+玩各种 Galgame 时，机翻的质量实在让人难以忍受——生硬、不通顺，严重破坏代入感。于是决定自己动手做一个翻译器：用自己的 AI Prompt，调出对味的译文。从此不用再将就。
 
 ### 工作原理
 
@@ -126,6 +138,6 @@ Select Area → Screenshot → Windows OCR → Stability Check → DeepSeek AI �
 
 ## Credits
 
-本项目由 [Reasonix](https://github.com/reasonix/code) 辅助开发，翻译能力由 [DeepSeek](https://github.com/deepseek-ai) 提供。
+本项目由 [Reasonix](https://github.com/esengine/DeepSeek-Reasonix) 辅助开发，翻译能力由 [DeepSeek](https://www.deepseek.com) 提供。
 
-Built with [Reasonix](https://github.com/reasonix/code) · Powered by [DeepSeek](https://github.com/deepseek-ai)
+Built with [Reasonix](https://github.com/esengine/DeepSeek-Reasonix) · Powered by [DeepSeek](https://www.deepseek.com)
