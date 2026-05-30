@@ -126,6 +126,6 @@ Select Area → Screenshot → Windows OCR → Stability Check → DeepSeek AI �
 
 ## Credits
 
-本项目由 [Reasonix](https://github.com/reasonix/code) 辅助开发，翻译能力由 [DeepSeek](https://github.com/deepseek-ai) 提供。
+本项目由 [Reasonix](https://github.com/esengine/DeepSeek-Reasonix) 辅助开发，翻译能力由 [DeepSeek](https://www.deepseek.com/) 提供。
 
-Built with [Reasonix](https://github.com/reasonix/code) · Powered by [DeepSeek](https://github.com/deepseek-ai)
+Built with [Reasonix](https://github.com/esengine/DeepSeek-Reasonix) · Powered by [DeepSeek](https://www.deepseek.com/)
