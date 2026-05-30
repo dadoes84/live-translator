@@ -378,6 +378,7 @@ html, body, #app {
   overflow-y: auto;
   padding: var(--space-lg) var(--space-xl);
   background: var(--color-bg);
+  position: relative;
 }
 
 .translation-placeholder {
@@ -392,6 +393,31 @@ html, body, #app {
   white-space: pre-wrap;
   line-height: 1.6;
   word-break: break-word;
+  user-select: text;
+}
+
+/* 复制按钮 */
+.copy-btn {
+  position: absolute;
+  top: var(--space-sm);
+  right: var(--space-sm);
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-sm);
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  z-index: 5;
+  transition: background 0.15s, color 0.15s;
+}
+
+.copy-btn:hover {
+  background: rgba(255, 255, 255, 0.16);
+  color: rgba(255, 255, 255, 0.9);
 }
 
 /* ================================================================

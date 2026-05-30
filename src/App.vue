@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div class="app-container" @contextmenu.prevent>
     <!-- ===== 标题栏 ===== -->
     <div class="titlebar" data-tauri-drag-region>
       <span class="titlebar-title">实时翻译器</span>
@@ -31,9 +31,9 @@
             @click="toggleRunning"
           >
             {{ isRunning ? '停止' : '开始' }}
-            <span class="shortcut-hint" v-if="!isRunning">({{ shortcutToggle }})</span>
+            <span class="shortcut-hint">({{ shortcutToggle }})</span>
           </button>
-          <button class="btn btn-area" @click="openAreaSelector">
+          <button class="btn btn-area" :disabled="isRunning" @click="openAreaSelector">
             区域设置 <span class="shortcut-hint">({{ shortcutArea }})</span>
           </button>
           <button class="btn btn-icon" @click="showAiSettings = true" title="设置">
@@ -109,6 +109,17 @@
         backgroundColor: bgColor,
       }"
     >
+      <button
+        v-if="translationResult"
+        class="copy-btn"
+        @click="copyTranslation"
+        title="复制翻译内容"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+        </svg>
+      </button>
       <div v-if="!translationResult" class="translation-placeholder">
         暂无翻译内容
       </div>
@@ -235,6 +246,14 @@ async function onAiSettingsSave(payload: { apiKey: string; model: string; prompt
 
 // ===== 翻译结果 =====
 const translationResult = ref('')
+
+async function copyTranslation() {
+  try {
+    await navigator.clipboard.writeText(translationResult.value)
+  } catch {
+    // fallback
+  }
+}
 
 // ===== 状态栏 =====
 const statusText = ref('就绪')
