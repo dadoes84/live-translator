@@ -1,7 +1,7 @@
 <template>
   <div class="app-container" @contextmenu.prevent>
     <!-- ===== 标题栏 ===== -->
-    <div class="titlebar" data-tauri-drag-region>
+    <div class="titlebar" data-tauri-drag-region @contextmenu.prevent>
       <span class="titlebar-title">实时翻译器</span>
       <div class="titlebar-actions">
         <button

@@ -16,8 +16,8 @@
       {
         "label": "main",
         "title": "实时翻译器",
-        "width": 1600,
-        "height": 900,
+        "width": 1200,
+        "height": 675,
         "resizable": false,
         "decorations": false,
         "center": true
