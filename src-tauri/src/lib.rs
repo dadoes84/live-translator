@@ -49,7 +49,7 @@ impl Default for AppConfig {
             is_pinned: false,
             api_key: String::new(),
             model: "deepseek-v4-flash".into(),
-            prompt: "你是一个专业的本地化翻译器，只将用户输入的文本翻译成简体中文，不做任何解释，不添加额外输出。".into(),
+            prompt: "你是一个专业的本地化翻译器，只将用户输入的文本翻译成简体中文。\n注意：输入文本中的换行可能是同一句话的折行，也可能是段落分隔。请根据语义自行判断，在译文中正确处理段落和换行。不要添加任何解释，只输出译文。".into(),
             shortcut_toggle: "Ctrl+Shift+T".into(),
             shortcut_area: "Ctrl+Shift+A".into(),
             region: None,
@@ -203,63 +203,20 @@ fn capture_and_ocr(
         .get()
         .map_err(|e| format!("OCR识别失败: {}", e))?;
 
-    // 7. 按行间距智能换段
+    // 7. 获取所有行文本（换行判断交给 AI）
     let lines = ocr_result.Lines().map_err(|e| e.to_string())?;
     let line_count = lines.Size().map_err(|e| e.to_string())? as usize;
     if line_count == 0 {
         return Ok(String::new());
     }
 
-    // 收集每行的 Y 坐标、高度、文本
-    struct LineInfo {
-        y: f32,
-        height: f32,
-        text: String,
-    }
-    let mut infos: Vec<LineInfo> = Vec::new();
-
+    let mut texts: Vec<String> = Vec::new();
     for i in 0..line_count as u32 {
         let line = lines.GetAt(i).map_err(|e| e.to_string())?;
-        let text = line.Text().map_err(|e| e.to_string())?.to_string();
-
-        // 用第一个词的 BoundingRect 获取行高
-        let words = line.Words().map_err(|e| e.to_string())?;
-        let word_count = words.Size().map_err(|e| e.to_string())?;
-        let (y, height) = if word_count > 0 {
-            let first_word = words.GetAt(0).map_err(|e| e.to_string())?;
-            let rect = first_word.BoundingRect().map_err(|e| e.to_string())?;
-            (rect.Y, rect.Height)
-        } else {
-            (0.0, 0.0)
-        };
-
-        infos.push(LineInfo { y, height, text });
+        texts.push(line.Text().map_err(|e| e.to_string())?.to_string());
     }
 
-    if infos.len() <= 1 {
-        return Ok(infos.into_iter().map(|l| l.text).collect::<Vec<_>>().join("\n"));
-    }
-
-    // 计算平均行高
-    let valid_heights: Vec<f32> = infos.iter().filter(|l| l.height > 0.0).map(|l| l.height).collect();
-    let avg_height = if valid_heights.is_empty() { 20.0 } else {
-        valid_heights.iter().sum::<f32>() / valid_heights.len() as f32
-    };
-    let gap_threshold = avg_height * 1.5;
-
-    let mut result = infos[0].text.clone();
-    for i in 1..infos.len() {
-        let prev_bottom = infos[i - 1].y + infos[i - 1].height;
-        let gap = infos[i].y - prev_bottom;
-        if gap > gap_threshold {
-            result.push_str("\n\n");
-        } else {
-            result.push('\n');
-        }
-        result.push_str(&infos[i].text);
-    }
-
-    Ok(result)
+    Ok(texts.join("\n"))
 }
 
 // ---------- 翻译 ----------
@@ -287,7 +244,7 @@ async fn translate(
     };
 
     let system_prompt = if config.prompt.is_empty() {
-        format!("你是一个专业的本地化翻译器，只将用户输入的{source_name}文本翻译成简体中文，不做任何解释，不添加额外输出。")
+        format!("你是一个专业的本地化翻译器，只将用户输入的{source_name}文本翻译成简体中文。\n注意：输入文本中的换行可能是同一句话的折行，也可能是段落分隔。请根据语义自行判断，在译文中正确处理段落和换行。不要添加任何解释，只输出译文。")
     } else {
         config.prompt.clone()
     };
