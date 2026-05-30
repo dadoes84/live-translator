@@ -32,6 +32,8 @@ pub struct AppConfig {
     pub api_key: String,
     pub model: String,
     pub prompt: String,
+    pub shortcut_toggle: String,
+    pub shortcut_area: String,
     pub region: Option<Region>,
 }
 
@@ -48,6 +50,8 @@ impl Default for AppConfig {
             api_key: String::new(),
             model: "deepseek-v4-flash".into(),
             prompt: "你是一个专业的本地化翻译器，只将用户输入的文本翻译成简体中文，不做任何解释，不添加额外输出。".into(),
+            shortcut_toggle: "Ctrl+Shift+T".into(),
+            shortcut_area: "Ctrl+Shift+A".into(),
             region: None,
         }
     }
@@ -355,6 +359,27 @@ async fn test_api_connection(
     }
 }
 
+// ---------- 调试日志 ----------
+#[tauri::command]
+fn debug_log(message: String) {
+    let path = std::env::current_dir()
+        .unwrap_or_default()
+        .join("debug.log");
+    let ts = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap_or_default();
+    let line = format!("[{}.{:03}] {}\n", ts.as_secs(), ts.subsec_millis(), message);
+    std::fs::OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open(&path)
+        .map(|mut f| {
+            use std::io::Write;
+            let _ = f.write_all(line.as_bytes());
+        })
+        .ok();
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -372,6 +397,7 @@ pub fn run() {
             let _ = window.set_always_on_top(config.is_pinned);
             Ok(())
         })
+        .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .invoke_handler(tauri::generate_handler![
             load_config,
             save_config,
@@ -380,6 +406,7 @@ pub fn run() {
             capture_and_ocr,
             translate,
             test_api_connection,
+            debug_log,
         ])
         .run(tauri::generate_context!())
         .expect("启动应用失败");

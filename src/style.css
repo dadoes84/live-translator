@@ -261,6 +261,26 @@ html, body, #app {
   min-width: 180px;
 }
 
+.btn-icon {
+  width: 32px;
+  height: 28px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.btn .shortcut-hint {
+  font-size: var(--font-size-xs);
+  opacity: 0.5;
+  font-weight: 400;
+}
+
 .btn-area {
   background: #327fba;
   border-color: #327fba;
@@ -489,6 +509,30 @@ html, body, #app {
 }
 
 /* 弹窗内表单行 */
+.form-section-title {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding-bottom: var(--space-xs);
+  border-bottom: 1px solid var(--color-border);
+  margin-top: var(--space-sm);
+}
+.form-section-title:first-child {
+  margin-top: 0;
+}
+
+.form-row {
+  display: flex;
+  gap: var(--space-md);
+}
+
+.flex-half {
+  flex: 1;
+  min-width: 0;
+}
+
 .form-group {
   display: flex;
   flex-direction: column;

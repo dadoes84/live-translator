@@ -2,10 +2,40 @@
   <div v-if="visible" class="modal-overlay" @click.self="onCancel">
     <div class="modal">
       <div class="modal-header">
-        <h3>AI 设置</h3>
+        <h3>设置</h3>
         <button class="modal-close" @click="onCancel">✕</button>
       </div>
       <div class="modal-body">
+        <!-- 快捷键 -->
+        <div class="form-section-title">快捷键</div>
+        <div class="form-row">
+          <div class="form-group flex-half">
+            <label>开始 / 停止</label>
+            <input
+              class="input"
+              type="text"
+              :value="localShortcutToggle"
+              readonly
+              @keydown.prevent="(e: KeyboardEvent) => captureKey(e, 'toggle')"
+              placeholder="点击后按键..."
+            />
+          </div>
+          <div class="form-group flex-half">
+            <label>区域设置</label>
+            <input
+              class="input"
+              type="text"
+              :value="localShortcutArea"
+              readonly
+              @keydown.prevent="(e: KeyboardEvent) => captureKey(e, 'area')"
+              placeholder="点击后按键..."
+            />
+          </div>
+        </div>
+
+        <!-- AI 设置 -->
+        <div class="form-section-title">AI 设置</div>
+
         <div class="form-group">
           <label>API Key</label>
           <input
@@ -64,26 +94,63 @@ const props = defineProps<{
   apiKey: string
   model: string
   prompt: string
+  shortcutToggle: string
+  shortcutArea: string
 }>()
 
 const emit = defineEmits<{
   (e: 'update:visible', v: boolean): void
-  (e: 'save', payload: { apiKey: string; model: string; prompt: string }): void
+  (e: 'save', payload: {
+    apiKey: string
+    model: string
+    prompt: string
+    shortcutToggle: string
+    shortcutArea: string
+  }): void
 }>()
 
 const localApiKey = ref(props.apiKey)
 const localModel = ref(props.model)
 const localPrompt = ref(props.prompt)
+const localShortcutToggle = ref(props.shortcutToggle)
+const localShortcutArea = ref(props.shortcutArea)
 
 const testing = ref(false)
 const testResult = ref('')
 const testStatus = ref<'success' | 'fail' | 'loading'>('loading')
 
-watch(() => [props.apiKey, props.model, props.prompt], ([key, mdl, prm]) => {
-  localApiKey.value = key
-  localModel.value = mdl
-  localPrompt.value = prm
-})
+watch(() => [props.apiKey, props.model, props.prompt, props.shortcutToggle, props.shortcutArea],
+  ([key, mdl, prm, st, sa]) => {
+    localApiKey.value = key
+    localModel.value = mdl
+    localPrompt.value = prm
+    localShortcutToggle.value = st
+    localShortcutArea.value = sa
+  })
+
+// 按键捕获
+function captureKey(e: KeyboardEvent, target: 'toggle' | 'area') {
+  const parts: string[] = []
+  if (e.ctrlKey) parts.push('Ctrl')
+  if (e.altKey) parts.push('Alt')
+  if (e.shiftKey) parts.push('Shift')
+  if (e.metaKey) parts.push('Meta')
+
+  const key = e.key
+  // 忽略单独按下的修饰键
+  if (['Control', 'Alt', 'Shift', 'Meta'].includes(key)) return
+
+  // 主键：字母大写，其他保持原样（如 F1, Escape, Tab）
+  const mainKey = key.length === 1 ? key.toUpperCase() : key
+  parts.push(mainKey)
+
+  const combo = parts.join('+')
+  if (target === 'toggle') {
+    localShortcutToggle.value = combo
+  } else {
+    localShortcutArea.value = combo
+  }
+}
 
 function onCancel() {
   testResult.value = ''
@@ -96,6 +163,8 @@ function onSave() {
     apiKey: localApiKey.value,
     model: localModel.value,
     prompt: localPrompt.value,
+    shortcutToggle: localShortcutToggle.value,
+    shortcutArea: localShortcutArea.value,
   })
   emit('update:visible', false)
 }
