@@ -8,5 +8,8 @@ src-tauri/target/
 *.key
 config.json
 
+# Reasonix 项目记忆文件（不纳入版本管理）
+REASONIX.md
+
 # 参考 demo（不纳入主项目版本管理）
 screen-translator-demo/
