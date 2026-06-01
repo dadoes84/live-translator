@@ -264,61 +264,29 @@ const statusClass = computed(() => {
   return ''
 })
 
-// ===== 诊断日志 =====
-async function log(msg: string) {
-  console.log(`[DBG] ${msg}`)
-  try { await invoke('debug_log', { message: msg }) } catch {}
-}
-
 // ===== 全局快捷键 =====
 async function registerShortcuts() {
-  await log(`=== 开始注册快捷键 ===`)
-  await log(`toggle shortcut: "${shortcutToggle.value}"`)
-  await log(`area shortcut: "${shortcutArea.value}"`)
-
   try {
     if (shortcutToggle.value) {
-      await log(`正在注册: ${shortcutToggle.value}`)
       await register(shortcutToggle.value, (ev) => {
-        invoke('debug_log', { message: `[CALLBACK] toggle 触发, state=${ev.state}` }).catch(() => {})
-        console.log(`[CALLBACK] toggle 触发, state=`, ev.state)
-        if (ev.state === 'Pressed') {
-          log('快捷键调用 toggleRunning()')
-          toggleRunning()
-        }
+        if (ev.state === 'Pressed') toggleRunning()
       })
-      await log(`注册成功: ${shortcutToggle.value}`)
     }
   } catch (err: any) {
-    const msg = `注册失败 (${shortcutToggle.value}): ${err}`
-    await log(msg)
-    console.error(msg, err)
+    console.error(`快捷键注册失败 (${shortcutToggle.value}):`, err)
   }
-
   try {
     if (shortcutArea.value) {
-      await log(`正在注册: ${shortcutArea.value}`)
       await register(shortcutArea.value, (ev) => {
-        invoke('debug_log', { message: `[CALLBACK] area 触发, state=${ev.state}` }).catch(() => {})
-        console.log(`[CALLBACK] area 触发, state=`, ev.state)
-        if (ev.state === 'Pressed') {
-          log('快捷键调用 openAreaSelector()')
-          openAreaSelector()
-        }
+        if (ev.state === 'Pressed') openAreaSelector()
       })
-      await log(`注册成功: ${shortcutArea.value}`)
     }
   } catch (err: any) {
-    const msg = `注册失败 (${shortcutArea.value}): ${err}`
-    await log(msg)
-    console.error(msg, err)
+    console.error(`快捷键注册失败 (${shortcutArea.value}):`, err)
   }
-
-  await log(`=== 快捷键注册完成 ===`)
 }
 
 async function unregisterShortcuts() {
-  await log('注销全部快捷键')
   try { if (shortcutToggle.value) await unregister(shortcutToggle.value) } catch {}
   try { if (shortcutArea.value) await unregister(shortcutArea.value) } catch {}
 }

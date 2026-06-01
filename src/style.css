@@ -528,10 +528,16 @@ html, body, #app {
 .modal-footer {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   gap: var(--space-sm);
   padding: var(--space-md) var(--space-xl);
   border-top: 1px solid var(--color-border);
+}
+
+.modal-footer-note {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
 }
 
 /* 弹窗内表单行 */

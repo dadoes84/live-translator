@@ -316,27 +316,6 @@ async fn test_api_connection(
     }
 }
 
-// ---------- 调试日志 ----------
-#[tauri::command]
-fn debug_log(message: String) {
-    let path = std::env::current_dir()
-        .unwrap_or_default()
-        .join("debug.log");
-    let ts = std::time::SystemTime::now()
-        .duration_since(std::time::UNIX_EPOCH)
-        .unwrap_or_default();
-    let line = format!("[{}.{:03}] {}\n", ts.as_secs(), ts.subsec_millis(), message);
-    std::fs::OpenOptions::new()
-        .create(true)
-        .append(true)
-        .open(&path)
-        .map(|mut f| {
-            use std::io::Write;
-            let _ = f.write_all(line.as_bytes());
-        })
-        .ok();
-}
-
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -363,7 +342,6 @@ pub fn run() {
             capture_and_ocr,
             translate,
             test_api_connection,
-            debug_log,
         ])
         .run(tauri::generate_context!())
         .expect("启动应用失败");

@@ -78,6 +78,7 @@
         </button>
       </div>
       <div class="modal-footer">
+        <span class="modal-footer-note">所有配置均保存在 %APPDATA%\com.live-translator.app</span>
         <button class="btn" @click="onCancel">取消</button>
         <button class="btn btn-primary" @click="onSave">保存</button>
       </div>
