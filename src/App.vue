@@ -179,7 +179,12 @@ function minimizeWindow() {
   appWindow.minimize()
 }
 
-function closeWindow() {
+async function closeWindow() {
+  // 先关闭选区窗口，否则进程无法退出
+  try {
+    const selector = await WebviewWindow.getByLabel('area-selector')
+    if (selector) await selector.close()
+  } catch {}
   appWindow.close()
 }
 
